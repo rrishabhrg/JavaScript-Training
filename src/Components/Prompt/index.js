@@ -1,3 +1,3 @@
-import SimpleDialogDemo from './Prompt';
+import Prompt from './Prompt';
 
-export { SimpleDialogDemo };
+export { Prompt };

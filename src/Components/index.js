@@ -1,6 +1,6 @@
 import { NavBar } from './NavBar';
 import { Footer } from './Footer';
 import { TableDemo } from './TableDemo';
-import { SimpleDialogDemo } from './Prompt';
+import { Prompt } from './Prompt';
 
-export { NavBar, Footer, TableDemo, SimpleDialogDemo };
+export { NavBar, Footer, TableDemo, Prompt };

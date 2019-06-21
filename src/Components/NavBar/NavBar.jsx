@@ -8,12 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { withStyles, fade } from '@material-ui/core/styles';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import { callApi } from '../../lib';
 
 const styles = theme => ({
     root: {
@@ -69,27 +63,6 @@ const styles = theme => ({
 });
 
 class NavBar extends React.Component {
-    // componentDidMount = async () => {
-    //     const method = 'get';
-    //     const url = 'https://api.openaq.org/v1/countries';
-    //     const data = {};
-    //     try {
-    //         console.log('This is navbar try block');
-    //         const res = await callApi({ method, url, data });
-    //         console.log('The response of navbar is:', res);
-    //         console.log('first:', res.data.results[0].name);
-    //         console.log('second:', res.data.results[10].name);
-    //         if (res) {
-    //             prompt("Select your country:");
-    //         }
-    //         this.setState({
-    //             list: res.data.results,
-    //         });
-    //     } catch (error) {
-    //         console.log('ERROR OCCURS---->', error);
-    //     }
-    // }
-
     render() {
         const { classes } = this.props;
         return (
@@ -97,7 +70,7 @@ class NavBar extends React.Component {
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h4">
-                            All About Countries
+                            All About Countries Geography
                         </Typography>
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>

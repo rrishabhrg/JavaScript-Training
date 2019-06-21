@@ -1,3 +1,3 @@
-import { TableList, TableDetails } from './Country';
+import { TableList } from './Country';
 
-export { TableList, TableDetails };
+export { TableList };

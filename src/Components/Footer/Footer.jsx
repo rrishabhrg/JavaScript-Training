@@ -3,33 +3,30 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { Link, Redirect } from 'react-router-dom';
-import { withStyles } from '@material-ui/core/styles';
+// import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
-    root: {
-        display: 'flex',
-        flexGrow: 1,
-    },
-    stem: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'end',
-        flexGrow: 1,
-    },
-});
+// const styles = theme => ({
+//     root: {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         flexGrow: 1,
+//     },
+//     stem: {
+//         display: 'flex',
+//         flexDirection: 'column',
+//         justifyContent: 'end',
+//         flexGrow: 1,
+//     },
+// });
 
 class Footer extends React.Component {
 
     render() {
 
-        const { classes } = this.props;
+        // const { classes } = this.props;
         return (
-            <div className={classes.root}>
-                <AppBar position="sticky" className={classes.stem}>
+            <div>
+                <AppBar position="relative">
                     <div>This is footer</div>
                 </AppBar>
             </div>
@@ -37,5 +34,5 @@ class Footer extends React.Component {
     }
 }
 
-export default withStyles(styles)(Footer);
-// export default Footer;
+// export default withStyles(styles)(Footer);
+export default Footer;

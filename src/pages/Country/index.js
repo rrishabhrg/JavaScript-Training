@@ -1,3 +1,3 @@
-import { TableList, TableDetails } from './components';
+import { TableList } from './components';
 
-export { TableList, TableDetails };
+export { TableList };

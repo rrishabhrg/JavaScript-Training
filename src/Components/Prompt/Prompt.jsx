@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,52 +11,30 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
-
-class SimpleDialogDemo extends React.Component {
-    state = {
-        open: false,
-    }
-
-    handleClickOpen = () => {
-        this.setState({
-            open: true,
-        });
-    }
-
-    handleClose = () => {
-        this.setState({
-            open: false,
-        });
-    }
-
+class Prompt extends React.Component {
+    
     render() {
-        const {
-            open,
-        } = this.state;
-        
+        const { countryData, close, dialogOpen, change, name } = this.props;
         return (
             <React.Fragment>
-                <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-                    Select Your Country
-                </Button>
-                <Dialog open={open} onClose={this.handleClose} fullWidth="true" aria-labelledby="form-dialog-title">
+                <Dialog open={dialogOpen} onClose={close} fullWidth="true" aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Select Your Country</DialogTitle>
                     <DialogContent>
                         <FormControl required>
-                            <InputLabel htmlFor="country-required">Country</InputLabel>
+                            <InputLabel shrink="true" disableAnimation htmlFor="country-required">Country</InputLabel>
                             <Select
-                                //   value={values.age}
-                                //   onChange={handleChange}
-                                name="age"
+                                onChange={change}
+                                value={name}
                                 inputProps={{
-                                    id: 'country-required',
+                                    name: 'name',
+                                    id: 'name-simple',
                                 }}
-                                // className={classes.selectEmpty}
                             >
-                                <MenuItem value=""><em>None</em></MenuItem>
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                {
+                                    countryData.map(item => (
+                                        <MenuItem value={item.name} key={item.name}>{item.name}</MenuItem>
+                                    ))
+                                }
                             </Select>
                             <FormHelperText>Required</FormHelperText>
                         </FormControl>
@@ -68,4 +45,4 @@ class SimpleDialogDemo extends React.Component {
     }
 }
 
-export default SimpleDialogDemo;
+export default Prompt;

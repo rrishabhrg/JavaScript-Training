@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
-import { NavBar, Footer, SimpleDialogDemo } from './Components';
+import { NavBar, Footer, Prompt } from './Components';
 import { TableList } from './pages';
 
 class App extends React.Component {
@@ -9,7 +9,6 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <div id="root">
-          <SimpleDialogDemo/>
           <NavBar />
           <TableList />
           {/* <Footer /> */}
