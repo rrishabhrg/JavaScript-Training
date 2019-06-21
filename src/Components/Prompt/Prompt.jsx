@@ -12,16 +12,15 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 
 class Prompt extends React.Component {
-    
     render() {
         const { countryData, close, dialogOpen, change, name } = this.props;
         return (
             <React.Fragment>
-                <Dialog open={dialogOpen} onClose={close} fullWidth="true" aria-labelledby="form-dialog-title">
+                <Dialog open={dialogOpen} onClose={close} fullWidth aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Select Your Country</DialogTitle>
                     <DialogContent>
                         <FormControl required>
-                            <InputLabel shrink="true" disableAnimation htmlFor="country-required">Country</InputLabel>
+                            <InputLabel shrink={true} disableAnimation htmlFor="country-required">Country</InputLabel>
                             <Select
                                 onChange={change}
                                 value={name}
@@ -31,7 +30,7 @@ class Prompt extends React.Component {
                                 }}
                             >
                                 {
-                                    countryData.map(item => (
+                                    countryData.length && countryData.map(item => (
                                         <MenuItem value={item.name} key={item.name}>{item.name}</MenuItem>
                                     ))
                                 }

@@ -14,10 +14,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 class TableDemo extends React.Component {
   render() {
     const {
-      columns, data, orderBy, order, onSort, count, page, rowsPerPage, handleChangePage, classes,
+      columns, data, orderBy, order, onSort, count, page, rowsPerPage, handleChangePage,
     } = this.props;
     if (!data.length) {
-      return null;
+      return <div>Loading....</div>;
     }
     return (
       <React.Fragment>
