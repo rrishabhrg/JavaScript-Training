@@ -3,11 +3,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable arrow-body-style */
 /* eslint-disable arrow-parens */
-/* eslint-disable no-console */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import moment from 'moment';
-import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { TableDemo } from '../../../Components';
 
 class TableList extends React.Component {
@@ -52,53 +51,51 @@ class TableList extends React.Component {
         } = this.state;
         const { tableData } = this.props;
         if (!tableData.length) {
-            return <div>Loading....</div>;
+            return (
+                <CircularProgress />
+            );
         }
         return (
             <React.Fragment>
-                <Grid container spacing={3}>
-                    <Grid item xs={12} sm={10}>
-                        <TableDemo
-                            id="id"
-                            data={tableData}
-                            columns={[
-                                {
-                                    field: 'city',
-                                    label: 'City',
-                                },
-                                {
-                                    field: 'location',
-                                    label: 'Location',
-                                },
-                                {
-                                    field: 'parameter',
-                                    label: 'Parameter',
-                                },
-                                {
-                                    field: 'value',
-                                    label: 'Value',
-                                },
-                                {
-                                    field: 'unit',
-                                    label: 'Unit',
-                                },
-                                {
-                                    field: 'createdAt',
-                                    label: 'Date',
-                                    format: this.getDateFormatted,
-                                },
-                            ]}
-                            orderBy={orderBy}
-                            order={order}
-                            onSort={this.handleSort}
-                            onSelect={this.handleSelect}
-                            count={100}
-                            page={page}
-                            rowsPerPage={rowsPerPage}
-                            onChangePage={this.handleChangePage}
-                        />
-                    </Grid>
-                </Grid>
+                <TableDemo
+                    id="id"
+                    data={tableData}
+                    columns={[
+                        {
+                            field: 'city',
+                            label: 'City',
+                        },
+                        {
+                            field: 'location',
+                            label: 'Location',
+                        },
+                        {
+                            field: 'parameter',
+                            label: 'Parameter',
+                        },
+                        {
+                            field: 'value',
+                            label: 'Value',
+                        },
+                        {
+                            field: 'unit',
+                            label: 'Unit',
+                        },
+                        {
+                            field: 'createdAt',
+                            label: 'Date',
+                            format: this.getDateFormatted,
+                        },
+                    ]}
+                    orderBy={orderBy}
+                    order={order}
+                    onSort={this.handleSort}
+                    onSelect={this.handleSelect}
+                    count={100}
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    onChangePage={this.handleChangePage}
+                />
             </React.Fragment>
         );
     }

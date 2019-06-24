@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-console */
 /* eslint-disable array-callback-return */
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
@@ -31,7 +30,7 @@ class Prompt extends React.Component {
                             >
                                 {
                                     countryData.length && countryData.map(item => (
-                                        <MenuItem value={item.name} key={item.name}>{item.name}</MenuItem>
+                                        <MenuItem value={item.code} key={item.name}>{item.name}</MenuItem>
                                     ))
                                 }
                             </Select>

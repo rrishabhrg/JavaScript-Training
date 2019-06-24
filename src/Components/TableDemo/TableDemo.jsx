@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 /* eslint-disable no-unneeded-ternary */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/prefer-stateless-function */
@@ -16,9 +15,6 @@ class TableDemo extends React.Component {
     const {
       columns, data, orderBy, order, onSort, count, page, rowsPerPage, handleChangePage,
     } = this.props;
-    if (!data.length) {
-      return <div>Loading....</div>;
-    }
     return (
       <React.Fragment>
         <Paper>
@@ -28,7 +24,7 @@ class TableDemo extends React.Component {
                 {
                   columns.map(row => (
                     <TableCell align="left">
-                      <TableSortLabel direction={order} onClick={onSort(order, orderBy)}>
+                      <TableSortLabel key={row.label} direction={order} onClick={onSort(order, orderBy)}>
                         {row.label}
                       </TableSortLabel>
                     </TableCell>
