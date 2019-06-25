@@ -7,11 +7,67 @@ import Radio from '@material-ui/core/Radio';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { callApi } from '../../lib';
 
 class SideBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectCountry: localStorage.getItem('selectedCountry') ? localStorage.getItem('selectedCountry') : '',
+            cityList: {},
+            paramsList: {},
+        };
+    }
+
+    componentDidMount = async () => {
+        const { selectCountry } = this.state;
+        const token = localStorage.getItem('selectedCountry');
+        if (token) {
+            const method = 'get';
+            const url = 'https://api.openaq.org/v1/cities?country=' + selectCountry;
+            const data = {};
+            try {
+                const res = await callApi({ method, url, data });
+                this.setState({
+                    cityList: res.data.results,
+                });
+            } catch (error) {
+                console.log('ERROR OCCURS---->', error);
+            }
+        } else {
+            return (
+                <CircularProgress />
+            );
+        }
+        if (token) {
+            const method = 'get';
+            const url = 'https://api.openaq.org/v1/parameters';
+            const data = {};
+            try {
+                const res = await callApi({ method, url, data });
+                this.setState({
+                    paramsList: res.data.results,
+                });
+            } catch (error) {
+                console.log('ERROR OCCURS---->', error);
+            }
+        } else {
+            return (
+                <CircularProgress />
+            );
+        }
+    }
+
     render() {
-        const { sideBarData } = this.props;
-        if (!(sideBarData.length)) {
+        const { cityList, paramsList } = this.state;
+        const { makeChange, doChange, city } = this.props;
+        // console.log('My Parameters Are:', param);
+        if (!(cityList.length)) {
+            return (
+                <CircularProgress />
+            );
+        }
+        if (!(paramsList.length)) {
             return (
                 <CircularProgress />
             );
@@ -22,13 +78,16 @@ class SideBar extends React.Component {
                     <h3>Filters</h3>
                     <div>
                         <FormControl component="fieldset">
-                            <FormLabel>City</FormLabel>
+                            <FormLabel component="legend">City</FormLabel>
                             <div style={{ overflowY: 'scroll', width: '100%', height: '200px', position: 'relative' }}>
                                 <RadioGroup
+                                    aria-label="City"
                                     name="city"
+                                    value={city}
+                                    onChange={makeChange}
                                 >
                                     {
-                                        sideBarData.map(row => (
+                                        cityList.map(row => (
                                             <FormControlLabel key={row.city} label={row.city} value={row.city} control={<Radio />}>
                                                 {row.city}
                                             </FormControlLabel>
@@ -42,9 +101,17 @@ class SideBar extends React.Component {
                             <div style={{ overflowY: 'scroll', width: '100%', height: '200px', position: 'relative' }}>
                                 <FormGroup>
                                     {
-                                        sideBarData.map(row => (
-                                            <FormControlLabel key={row.city} label={row.parameter} control={<Checkbox />}>
-                                                {row.parameter}
+                                        paramsList.map(row => (
+                                            <FormControlLabel
+                                                key={row.city}
+                                                label={row.id}
+                                                control={<Checkbox
+                                                    value={row.id}
+                                                    onChange={doChange}
+                                                    checked={false}
+                                                />}
+                                            >
+                                                {row.id}
                                             </FormControlLabel>
                                         ))
                                     }

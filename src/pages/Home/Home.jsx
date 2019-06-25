@@ -9,14 +9,18 @@ class Home extends React.Component {
         super(props);
         this.state = {
             selectCountry: localStorage.getItem('selectedCountry') ? localStorage.getItem('selectedCountry') : '',
+            selectCity: '',
+            selectParam: '',
             open: false,
             countryList: {},
-            tableList: {},
+            tableList: {}
         };
     }
 
     componentDidMount = async () => {
         const token = localStorage.getItem('selectedCountry');
+        // console.log('TOKEN', token);
+        // console.log(this.state.selectCountry);
         if (!token) {
             this.handleClickOpen();
             const method = 'get';
@@ -35,18 +39,19 @@ class Home extends React.Component {
         }
     }
     
-    handleCountrySelect = async (event) => {
+    handleCountrySelect = (event) => {
         this.setState({
             selectCountry: event.target.value,
         });
         localStorage.setItem('selectedCountry', event.target.value);
-        // alert("You're inside", this.state.selectedCountry);
-        this.getTableData();
         this.handleClose();
+        // alert("You're inside"+this.state.selectedCountry);
+        this.getTableData();
     }
 
     getTableData = async () => {
         const { selectCountry } = this.state;
+        console.log('Selected Country Inside getTableData', selectCountry);
         const method = 'get';
         const url = 'https://api.openaq.org/v1/measurements?country=' + selectCountry;
         const data = {};
@@ -93,8 +98,55 @@ class Home extends React.Component {
         }
     }
 
+    handleOnChange = async (event) => {       // Handler for Radio
+        const { selectCountry, selectCity } = this.state;
+        console.log('Selected City Is', selectCity);
+        console.log('Selected Event Is', event.target.value);
+        this.setState({
+            selectCity: event.target.value,
+        });
+        const method = 'get';
+        const url = 'https://api.openaq.org/v1/measurements?country=' + selectCountry + '&city=' + selectCity;
+        const data = {};
+        console.log('First');
+        try {
+            console.log('Second');
+            const res = await callApi({ method, url, data });
+            console.log('Third');
+            console.log('Response for radio', res);
+            this.setState({
+                tableList: res.data.results,
+            });
+            console.log('table data', this.state.tableList);
+        } catch (error) {
+            console.log('ERROR OCCURS---->', error);
+        }
+    }
+
+    handleClickChange = async (event) => {       // Handler for Checkbox
+        const { selectCountry, selectCity, selectParam } = this.state;
+        // console.log('My Parameters Are:', selectParam);
+        this.setState({
+            selectParam: event.target.value,
+        })
+        // console.log('The Parameters Are:', selectParam);
+        const method = 'get';
+        const url = 'https://api.openaq.org/v1/measurements?country=' + selectCountry + '&city=' + selectCity + '&parameter[]=' + selectParam;
+        const data = {};
+        try {
+            const res = await callApi({ method, url, data });
+            this.setState({
+                tableList: res.data.results,
+            });
+        } catch (error) {
+            console.log('ERROR OCCURS---->', error);
+        }
+    }
+
     render() {
-        const { countryList, open, selectCountry, tableList, } = this.state;
+        const { countryList, open, selectCountry, tableList, selectCity, selectParam } = this.state;
+        // console.log('My Parameters Are:', selectParam);
+        // console.log('table data', tableList);
         return (
             <React.Fragment>
                 <NavBar
@@ -118,7 +170,10 @@ class Home extends React.Component {
                     </Grid>
                     <Grid item xs={12} sm={2}>
                         <SideBar
-                            sideBarData={tableList}
+                            makeChange={this.handleOnChange}
+                            doChange={this.handleClickChange}
+                            city={selectCity}
+                            param={selectParam}
                         />
                     </Grid>
                     <Grid item xs={12} sm={10}>

@@ -87,6 +87,7 @@ class NavBar extends React.Component {
                         </div>
                         <div>
                             <Button onClick={ClickOpen}>
+                                <p>Your Country :</p>
                                 {yourCountry}
                                 <KeyboardArrowDown />
                             </Button>
