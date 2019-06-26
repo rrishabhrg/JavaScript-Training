@@ -13,65 +13,62 @@ class SideBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectCountry: localStorage.getItem('selectedCountry') ? localStorage.getItem('selectedCountry') : '',
+            selectedCountry: localStorage.getItem('token') ? localStorage.getItem('token') : '',
             cityList: {},
             paramsList: {},
         };
     }
 
-    componentDidMount = async () => {
-        const { selectCountry } = this.state;
-        const token = localStorage.getItem('selectedCountry');
-        if (token) {
-            const method = 'get';
-            const url = 'https://api.openaq.org/v1/cities?country=' + selectCountry;
-            const data = {};
-            try {
-                const res = await callApi({ method, url, data });
-                this.setState({
-                    cityList: res.data.results,
-                });
-            } catch (error) {
-                console.log('ERROR OCCURS---->', error);
-            }
-        } else {
-            return (
-                <CircularProgress />
-            );
-        }
-        if (token) {
-            const method = 'get';
-            const url = 'https://api.openaq.org/v1/parameters';
-            const data = {};
-            try {
-                const res = await callApi({ method, url, data });
-                this.setState({
-                    paramsList: res.data.results,
-                });
-            } catch (error) {
-                console.log('ERROR OCCURS---->', error);
-            }
-        } else {
-            return (
-                <CircularProgress />
-            );
-        }
-    }
+    // componentDidMount = async () => {
+    //     console.log('side did mount');
+    //     const { selectedCountry } = this.state;
+    //     const token = localStorage.getItem('token');
+    //     if (token) {
+    //         const method = 'get';
+    //         const url = 'https://api.openaq.org/v1/cities?country=' + selectedCountry;
+    //         const data = {};
+    //         try {
+    //             const res = await callApi({ method, url, data });
+    //             this.setState({
+    //                 cityList: res.data.results,
+    //             });
+    //         } catch (error) {
+    //             console.log('ERROR OCCURS---->', error);
+    //         }
+    //     } else {
+    //         return (
+    //             <CircularProgress />
+    //         );
+    //     }
+    //     if (token) {
+    //         const method = 'get';
+    //         const url = 'https://api.openaq.org/v1/parameters';
+    //         const data = {};
+    //         try {
+    //             const res = await callApi({ method, url, data });
+    //             this.setState({
+    //                 paramsList: res.data.results,
+    //             });
+    //         } catch (error) {
+    //             console.log('ERROR OCCURS---->', error);
+    //         }
+    //     } else {
+    //         return (
+    //             <CircularProgress />
+    //         );
+    //     }
+    // }
 
     render() {
-        const { cityList, paramsList } = this.state;
-        const { makeChange, doChange, city } = this.props;
+        // const { cityList, paramsList } = this.state;
+        const { makeChange, doChange, city, cities, parameters } = this.props;
         // console.log('My Parameters Are:', param);
-        if (!(cityList.length)) {
-            return (
-                <CircularProgress />
-            );
+        if (!(cities.length)) {
+            return <CircularProgress />
         }
-        if (!(paramsList.length)) {
-            return (
-                <CircularProgress />
-            );
-        }
+        // if (!parameters.length) {
+        //     return <CircularProgress />;
+        // }
         return (
             <React.Fragment>
                 <div style={{ width: '25%' }}>
@@ -87,7 +84,7 @@ class SideBar extends React.Component {
                                     onChange={makeChange}
                                 >
                                     {
-                                        cityList.map(row => (
+                                        cities.map(row => (
                                             <FormControlLabel key={row.city} label={row.city} value={row.city} control={<Radio />}>
                                                 {row.city}
                                             </FormControlLabel>
@@ -96,19 +93,19 @@ class SideBar extends React.Component {
                                 </RadioGroup>
                             </div>
                         </FormControl>
-                        <FormControl component="fieldset" style={{ marginTop: '20px' }}>
+                        {/* <FormControl component="fieldset" style={{ marginTop: '20px' }}>
                             <FormLabel>Parameters</FormLabel>
                             <div style={{ overflowY: 'scroll', width: '100%', height: '200px', position: 'relative' }}>
                                 <FormGroup>
                                     {
-                                        paramsList.map(row => (
+                                        parameters.map(row => (
                                             <FormControlLabel
                                                 key={row.city}
                                                 label={row.id}
+                                                onChange={doChange}
                                                 control={<Checkbox
                                                     value={row.id}
-                                                    onChange={doChange}
-                                                    checked={false}
+                                                    // onChange={doChange}
                                                 />}
                                             >
                                                 {row.id}
@@ -117,7 +114,7 @@ class SideBar extends React.Component {
                                     }
                                 </FormGroup>
                             </div>
-                        </FormControl>
+                        </FormControl> */}
                         <FormControl component="fieldset" style={{ marginTop: '30px' }}>
                             <FormLabel component="legend">HasGeo</FormLabel>
                         </FormControl>

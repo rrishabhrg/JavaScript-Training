@@ -23,7 +23,6 @@ class Prompt extends React.Component {
                             <Select
                                 onChange={change}
                                 value={name}
-                                // value={code}
                                 inputProps={{
                                     name: 'name',
                                     id: 'name-simple',

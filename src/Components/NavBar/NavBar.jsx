@@ -21,9 +21,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = theme => ({
     root: {
+        display: 'flex',
         flexGrow: 1,
+        flexDirection: 'row',
+    },
+    dropdown: {
+        display: 'flex',
+        flexDirection: 'row',
     },
     search: {
+        display: 'flex',
+        justifyContent: 'end',
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -48,8 +56,10 @@ const styles = theme => ({
     },
     inputRoot: {
         color: 'inherit',
+        display: 'flex',
     },
     inputInput: {
+        display: 'flex',
         padding: theme.spacing(1, 1, 1, 7),
         transition: theme.transitions.create('width'),
         width: '100%',
@@ -64,31 +74,17 @@ const styles = theme => ({
 
 class NavBar extends React.Component {
     render() {
-        const { classes, yourCountry, dialogOpen, close, change, name, countryData, ClickOpen } = this.props;
+        const { classes, yourCountry, dialogOpen, close, change, name, countryData, ClickOpen, makeSearch } = this.props;
         return (
-            <div>
+            <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="h4">
+                        <Typography variant="title">
                             All About Countries Geography
                         </Typography>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder="Search…"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'Search' }}
-                            />
-                        </div>
-                        <div>
+                        <div className={classes.dropdown}>
                             <Button onClick={ClickOpen}>
-                                <p>Your Country :</p>
-                                {yourCountry}
+                                <Typography >Your Country Code :{yourCountry}</Typography>
                                 <KeyboardArrowDown />
                             </Button>
                             <Dialog open={dialogOpen} onClose={close} fullWidth aria-labelledby="form-dialog-title">
@@ -114,6 +110,20 @@ class NavBar extends React.Component {
                                     </FormControl>
                                 </DialogContent>
                             </Dialog>
+                        </div>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon/>
+                            </div>
+                            <InputBase
+                                placeholder="Search…"
+                                onChange={makeSearch}
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'Search' }}
+                            />
                         </div>
                     </Toolbar>
                 </AppBar>
