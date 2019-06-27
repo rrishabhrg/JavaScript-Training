@@ -8,7 +8,7 @@ class App extends React.Component {
     return (
       <React.Fragment>
         <div id="root">
-          <Home/>
+          <Home />
         </div>
       </React.Fragment>
     );

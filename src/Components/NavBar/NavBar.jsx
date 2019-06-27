@@ -28,9 +28,12 @@ const styles = theme => ({
     dropdown: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'center',
+        flex: 5
     },
     search: {
         display: 'flex',
+        flex: 3,
         justifyContent: 'end',
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -46,7 +49,16 @@ const styles = theme => ({
         },
     },
     searchIcon: {
-        width: theme.spacing(7),
+        width: theme.spacing(5),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    close: {
+        width: theme.spacing(62),
         height: '100%',
         position: 'absolute',
         pointerEvents: 'none',
@@ -83,10 +95,13 @@ class NavBar extends React.Component {
                             All About Countries Geography
                         </Typography>
                         <div className={classes.dropdown}>
-                            <Button onClick={ClickOpen}>
-                                <Typography >Your Country Code :{yourCountry}</Typography>
-                                <KeyboardArrowDown />
-                            </Button>
+                            <div>
+                                <Typography variant="title">Your Country Code : {yourCountry}</Typography><br/>
+                                <Typography variant="title">Select Country :</Typography>
+                                <Button onClick={ClickOpen}>
+                                    <KeyboardArrowDown />
+                                </Button>
+                            </div>
                             <Dialog open={dialogOpen} onClose={close} fullWidth aria-labelledby="form-dialog-title">
                                 <DialogTitle id="form-dialog-title">Select Your Country</DialogTitle>
                                 <DialogContent>
