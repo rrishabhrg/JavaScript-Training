@@ -15,6 +15,7 @@ class TableDemo extends React.Component {
     const {
       columns, data, orderBy, order, onSort, count, page, rowsPerPage, handleChangePage,
     } = this.props;
+    console.log('TABLE DEMO', data ? data[0] : '');
     return (
       <React.Fragment>
         <Paper>

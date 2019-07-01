@@ -19,24 +19,25 @@ class Chips extends React.Component {
 
     render() {
         const { classes, chips, remove } = this.props;
-        console.log('My Chips Are', chips.length);
-        if (!(chips.length)) {
-            return <div>Loading....</div>
-        }
-        return (
-            <Paper className={classes.root}>
-                {
-                    chips.map(data => (
-                        <Chip
-                            key={data.key}
-                            label={data.label}
-                            onDelete={remove(data)}
-                            className={classes.chip}
+        console.log('My Chips Are', chips);
+        console.log('Length Of Chips Are', chips.length);
+        if ((chips.length)>0) {
+            return (
+                <Paper className={classes.root}>
+                    {
+                        chips.map(data => (
+                            <Chip
+                                key={data.key}
+                                label={data.label}
+                                // onDelete={remove(data)}
+                                className={classes.chip}
                         />
-                    ))
-                }
-            </Paper>
-        );
+                        ))
+                    }
+                </Paper>
+            );
+        }
+        return null;
     }
 }
 

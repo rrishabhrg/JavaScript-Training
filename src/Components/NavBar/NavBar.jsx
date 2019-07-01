@@ -91,14 +91,21 @@ class NavBar extends React.Component {
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                        <Typography variant="title">
-                            All About Countries Geography
-                        </Typography>
+                        <div>
+                            <Typography variant="title">
+                                <div>
+                                    Know Your Globe !!!!
+                                </div>
+                                <div>
+                                    All About Countries Geography
+                                </div>
+                            </Typography>
+                        </div>
                         <div className={classes.dropdown}>
                             <div>
                                 <Typography variant="title">Your Country Code : {yourCountry}</Typography><br/>
-                                <Typography variant="title">Select Country :</Typography>
-                                <Button onClick={ClickOpen}>
+                                <Typography variant="title">Change Country :</Typography>
+                                <Button onClick={ClickOpen} size={"small"}>
                                     <KeyboardArrowDown />
                                 </Button>
                             </div>

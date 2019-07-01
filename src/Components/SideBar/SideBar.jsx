@@ -9,6 +9,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 class SideBar extends React.Component {
+    // handleChange = () = {
+
+    // }
+
     render() {
         const { city, makeChange, cities, parameters, doChange, show } = this.props;
         if (!(cities.length)) {
@@ -64,6 +68,14 @@ class SideBar extends React.Component {
                         </FormControl>
                         <FormControl component="fieldset" style={{ marginTop: '30px' }}>
                             <FormLabel component="legend">HasGeo</FormLabel>
+                            <FormControlLabel
+                                control={<Checkbox value="true" />}
+                                label="True"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox value="false" />}
+                                label="False"
+                            />
                         </FormControl>
                     </div>
                 </div>
