@@ -6,11 +6,9 @@ import { Home } from './pages/Home';
 class App extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <div id="root">
-          <Home />
-        </div>
-      </React.Fragment>
+      <div id="root">
+        <Home />
+      </div>
     );
   }
 }

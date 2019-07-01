@@ -13,54 +13,67 @@ import TablePagination from '@material-ui/core/TablePagination';
 class TableDemo extends React.Component {
   render() {
     const {
-      columns, data, orderBy, order, onSort, count, page, rowsPerPage, handleChangePage,
+      columns,
+      data,
+      arrowDirection,
+      onSort,
+      noPage,
+      noLimit,
+      noFound,
+      changePage
     } = this.props;
-    console.log('TABLE DEMO', data ? data[0] : '');
+    console.log("TABLE DEMO", data ? data[0] : "");
+    console.log("Direction of arrow-->", arrowDirection);
     return (
       <React.Fragment>
         <Paper>
           <Table size="medium">
             <TableHead>
               <TableRow>
-                {
-                  columns.map(row => (
-                    <TableCell align="left">
-                      <TableSortLabel key={row.label} direction={order} onClick={onSort(order, orderBy)}>
-                        {row.label}
-                      </TableSortLabel>
-                    </TableCell>
-                  ))
-                }
+                {columns.map(row => (
+                  <TableCell align="left">
+                    <TableSortLabel
+                      key={row.label}
+                      value={row.field}
+                      direction={arrowDirection}
+                      onClick={onSort(arrowDirection, row.field)}
+                    >
+                      {row.label}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
-            <TableBody style={{ cursor: 'pointer' }}>
-              {
-                data.map((row, index) => (
-                  <TableRow key={row.city} hover selected={index % 2 === 0 ? true : false}>
-                    {
-                      columns.map(value => (
-                        <TableCell align="left">{(value.format) ? value.format(row[value.field]) : row[value.field]}</TableCell>
-                      ))
-                    }
-                  </TableRow>
-                ))
-              }
+            <TableBody style={{ cursor: "pointer" }}>
+              {data.map((row, index) => (
+                <TableRow
+                  hover
+                  selected={index % 2 === 0 ? true : false}
+                >
+                  {columns.map(value => (
+                    <TableCell align="left">
+                      {value.format
+                        ? value.format(row[value.field])
+                        : row[value.field]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
           <TablePagination
             component="div"
-            count={count}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            labelRowsPerPage
+            count={noFound}     // Total Number Of Rows
+            page={noPage}
+            rowsPerPage={noLimit}
+            rowsPerPageOptions={[50, 100, 500, 1000]}
             backIconButtonProps={{
-              'aria-label': 'Previous Page',
+              "aria-label": "Previous Page"
             }}
             nextIconButtonProps={{
-              'aria-label': 'Next Page',
+              "aria-label": "Next Page"
             }}
-            rowsPerPageOptions={[]}
-            onChangePage={handleChangePage}
+            onChangePage={changePage}
           />
         </Paper>
       </React.Fragment>

@@ -10,46 +10,20 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { TableDemo } from '../../../Components';
 
 class TableList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            order: 'asc',
-            orderBy: '',
-            page: 0,
-            rowsPerPage: 10,
-        };
-    }
-    
-    handleSort = (order, orderBy) => () => {
-        if (order === 'asc') {
-            this.setState({
-                order: 'desc',
-            });
-        } else {
-            this.setState({
-                order: 'asc',
-            });
-        }
-    }
-
-    handleChangePage = (page, rowsPerPage) => {
-        if (page <= rowsPerPage) {
-            this.setState({
-                page: page + rowsPerPage,
-                rowsPerPage: rowsPerPage + rowsPerPage,
-            });
-        }
-    }
-
     getDateFormatted = () => {
         return moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
     }
 
     render() {
         const {
-            order, orderBy, page, rowsPerPage,
-        } = this.state;
-        const { tableData } = this.props;
+            tableData,
+            sorting,
+            sortArrow,
+            pages,
+            limits,
+            founds,
+            pageChange
+        } = this.props;
         if (!tableData.length) {
             return (
                 <CircularProgress />
@@ -87,14 +61,13 @@ class TableList extends React.Component {
                             format: this.getDateFormatted,
                         },
                     ]}
-                    orderBy={orderBy}
-                    order={order}
-                    onSort={this.handleSort}
+                    onSort={sorting}
+                    arrowDirection={sortArrow}
                     onSelect={this.handleSelect}
-                    count={100}
-                    page={page}
-                    rowsPerPage={rowsPerPage}
-                    onChangePage={this.handleChangePage}
+                    noPage={pages}
+                    noLimit={limits}
+                    noFound={founds}
+                    changePage={pageChange}
                 />
             </React.Fragment>
         );

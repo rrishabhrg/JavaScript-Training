@@ -16,7 +16,6 @@ const styles = theme => ({
 });
 
 class Chips extends React.Component {
-
     render() {
         const { classes, chips, remove } = this.props;
         console.log('My Chips Are', chips);
@@ -29,7 +28,7 @@ class Chips extends React.Component {
                             <Chip
                                 key={data.key}
                                 label={data.label}
-                                // onDelete={remove(data)}
+                                onDelete={remove(data)}
                                 className={classes.chip}
                         />
                         ))

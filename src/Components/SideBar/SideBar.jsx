@@ -7,14 +7,11 @@ import Radio from '@material-ui/core/Radio';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { Button } from '@material-ui/core';
 
 class SideBar extends React.Component {
-    // handleChange = () = {
-
-    // }
-
     render() {
-        const { city, makeChange, cities, parameters, doChange, show } = this.props;
+        const { city, makeChange, cities, parameters, doChange, show, btnClick } = this.props;
         if (!(cities.length)) {
             return <CircularProgress />
         }
@@ -66,7 +63,7 @@ class SideBar extends React.Component {
                                 </FormGroup>
                             </div>
                         </FormControl>
-                        <FormControl component="fieldset" style={{ marginTop: '30px' }}>
+                        {/* <FormControl component="fieldset" style={{ marginTop: '30px' }}>
                             <FormLabel component="legend">HasGeo</FormLabel>
                             <FormControlLabel
                                 control={<Checkbox value="true" />}
@@ -76,6 +73,9 @@ class SideBar extends React.Component {
                                 control={<Checkbox value="false" />}
                                 label="False"
                             />
+                        </FormControl> */}
+                        <FormControl component="fieldset" style={{ marginTop: '30px' }}>
+                            <Button onClick={btnClick}>HasGeo</Button>
                         </FormControl>
                     </div>
                 </div>
