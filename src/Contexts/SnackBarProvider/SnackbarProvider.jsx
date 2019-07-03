@@ -4,10 +4,21 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { green } from '@material-ui/core/colors';
 
 export const MyContext = React.createContext();
 
 const styles = theme => ({
+  success: {
+    backgroundColor: green[600],
+  },
+  icon: {
+    fontSize: 20,
+  },
+  iconVariant: {
+    opacity: 0.9,
+    marginRight: theme.spacing(1),
+  },
   message: {
     display: 'flex',
     alignItems: 'center',
@@ -55,7 +66,7 @@ class SnackbarProvider extends React.Component {
             horizontal: 'left',
           }}
           open={open}
-          autoHideDuration={3000}
+          autoHideDuration={2000}
           onClose={this.closeSnackBar}
           onClick={this.closeSnackBar}
           ContentProps={{

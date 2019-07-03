@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://api.openaq.org/v1/';

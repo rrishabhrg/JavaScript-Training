@@ -25,7 +25,7 @@ class SideBar extends React.Component {
                     <div>
                         <FormControl component="fieldset">
                             <FormLabel component="legend">City</FormLabel>
-                            <div style={{ overflowY: 'scroll', width: '100%', height: '200px', position: 'relative' }}>
+                            <div style={{ overflowY: 'scroll', width: '100%', height: '208px', position: 'relative' }}>
                                 <RadioGroup
                                     aria-label="City"
                                     name="city"
@@ -75,7 +75,7 @@ class SideBar extends React.Component {
                             />
                         </FormControl> */}
                         <FormControl component="fieldset" style={{ marginTop: '30px' }}>
-                            <Button onClick={btnClick}>HasGeo</Button>
+                            <Button variant="contained" color="secondary" onClick={btnClick}>HasGeo</Button>
                         </FormControl>
                     </div>
                 </div>

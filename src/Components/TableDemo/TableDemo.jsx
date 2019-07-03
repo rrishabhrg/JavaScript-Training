@@ -22,8 +22,6 @@ class TableDemo extends React.Component {
       noFound,
       changePage
     } = this.props;
-    console.log("TABLE DEMO", data ? data[0] : "");
-    console.log("Direction of arrow-->", arrowDirection);
     return (
       <React.Fragment>
         <Paper>
@@ -73,7 +71,7 @@ class TableDemo extends React.Component {
             nextIconButtonProps={{
               "aria-label": "Next Page"
             }}
-            onChangePage={changePage}
+            onChangePage={changePage}      // Event-Handler For Table Pagination
           />
         </Paper>
       </React.Fragment>

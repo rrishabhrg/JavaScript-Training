@@ -12,31 +12,29 @@ const styles = theme => ({
     },
     chip: {
         margin: theme.spacing(0.5),
-    },
+    }
 });
 
 class Chips extends React.Component {
     render() {
-        const { classes, chips, remove } = this.props;
-        console.log('My Chips Are', chips);
-        console.log('Length Of Chips Are', chips.length);
-        if ((chips.length)>0) {
-            return (
-                <Paper className={classes.root}>
-                    {
-                        chips.map(data => (
-                            <Chip
-                                key={data.key}
-                                label={data.label}
-                                onDelete={remove(data)}
-                                className={classes.chip}
+        const { classes, chipsArr, remove } = this.props;
+        console.log('chips--->', chipsArr);
+        return (
+            <Paper className={classes.root}>
+                <Chip label="Applied Filters" className={classes.chip} variant="outlined" />
+                {
+                    chipsArr.map(data => (
+                        <Chip
+                            variant="outlined"
+                            color="secondary"
+                            label={data.label}
+                            className={classes.chip}
+                            onDelete={remove(chipsArr)}
                         />
-                        ))
-                    }
-                </Paper>
-            );
-        }
-        return null;
+                    ))
+                }
+            </Paper>
+        );
     }
 }
 

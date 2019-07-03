@@ -4,6 +4,7 @@ import { Grid } from '@material-ui/core';
 import { NavBar, Prompt, SideBar, Chips } from '../../Components';
 import { TableList } from '../Country';
 import { callApi } from '../../lib';
+import { SnackbarHOC } from '../../Contexts';
 
 class Home extends React.Component { 
     constructor(props) {
@@ -11,7 +12,6 @@ class Home extends React.Component {
         this.state = {
             open: false,
             disable: true,
-            location: '',
             selectedCountry: localStorage.getItem('token') ? localStorage.getItem('token') : '',
             selectCity: {},
             countryList: {},
@@ -26,7 +26,8 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        console.log('component did mount');
+        // const { value } = this.props;      // For Opening SnackBar
+        // console.log('Value-->', value);
         const token = localStorage.getItem('token');
         if (!token) {
             this.handleClickOpen();
@@ -53,15 +54,13 @@ class Home extends React.Component {
     }
 
     handleCountrySelect = (event) => {                                             // Handler For Selecting The Country From DropDown List Of Countries
-        // const { value } = this.props;
-        // console.log('Value', value);
         const selectedCountry = event.target.value;
         if (selectedCountry) {
-            // value.onOpenSnackbar();
             this.setState({
                 selectedCountry: selectedCountry,
             });
             this.handleClose();
+            alert('Your Country Code Is: ' + selectedCountry);
             this.getTableData(selectedCountry);
             this.getRadioList(selectedCountry);
             this.getCheckBoxList();
@@ -76,45 +75,25 @@ class Home extends React.Component {
     }
 
     getTableData = (selectedCountry) => {                         // Handler For Retrieving Data Inside Table After The Selection Of Country From The DropDown
-        console.log('table function');
+        const { value } = this.props;      // For Opening SnackBar
+        console.log('Value-->', value);
         const method = 'get';
         const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry;
         const data = {};
         callApi({ method, url, data }).then((res) => {
-            console.log('xxxxxxx', res);
             this.setState({
                 tableList: res.data.results,
                 found: res.data.meta.found,
                 page: 0,
                 limit: res.data.meta.limit
             });
-            console.log("Page Is", this.state.page);
         });
     }
 
-    // getTableData(selectedCountry) {
-    //     console.log('table function');
-    //     return new Promise((resolve, reject) => {
-    //         const method = 'get';
-    //         const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry;
-    //         const data = {};
-    //         const res = callApi({ method, url, data }).then(() => {
-    //             console.log('RESPONSE--response', res);
-    //             this.setState({
-    //                 tableList: res.data.results,
-    //             });
-    //             resolve();
-    //         }).catch(err => {
-    //             console.log('ERROR OCCURS---->', err);
-    //             reject();
-    //         });
-    //     });
-    // }
-
     getRadioList = (selectedCountry) => {                          // Handler For Retrieving Data Inside SideBar(RadioGroup) After The Selection Of Country From The DropDown
-        console.log('radio function');
+        const limitRadio = 10000;
         const method = 'get';
-        const url = 'https://api.openaq.org/v1/cities?country=' + selectedCountry;
+        const url = 'https://api.openaq.org/v1/cities?country=' + selectedCountry + '&limit=' + limitRadio;
         const data = {};
         callApi({ method, url, data }).then((res) => {
             this.setState({
@@ -124,7 +103,6 @@ class Home extends React.Component {
     }
 
     getCheckBoxList = () => {                                      // Handler For Retrieving Data Inside SideBar(CheckBox) After The Selection Of Country From The DropDown
-        console.log('checkbox function');
         const method = 'get';
         const url = 'https://api.openaq.org/v1/parameters';
         const data = {};
@@ -136,21 +114,20 @@ class Home extends React.Component {
     }
 
     handleNavBarClickOpen = () => {                                // Handler For Opening The DropDown Box If User Want To Change The Country
-        console.log('NavBar Function Called.')
         this.handleClickOpen();
         const method = 'get';
         const url = 'https://api.openaq.org/v1/countries';
         const data = {};
-            callApi({ method, url, data }).then((res) => {
-                this.setState({
-                    countryList: res.data.results,
-                });
+        callApi({ method, url, data }).then((res) => {
+            this.setState({
+                countryList: res.data.results,
             });
+        });
     }
 
     handleOnChange = (event) => {                                                  // Handler for RadioGroup
         const selectCity = event.target.value;
-        const { selectedCountry, tableList } = this.state;
+        const { selectedCountry } = this.state;
         let { chipData } = this.state;
         if (selectCity === '') {
             chipData.push({ label: selectCity });
@@ -158,8 +135,6 @@ class Home extends React.Component {
             chipData.pop({ label: selectCity });
             chipData.push({ label: selectCity });
         }
-        
-        console.log('Selected City Is', selectCity);
         this.setState({
             selectCity,
             disable: false,
@@ -167,39 +142,30 @@ class Home extends React.Component {
         const method = 'get';
         const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&city=' + selectCity;
         const data = {};
-        console.log('First');
-            console.log('Second');
-            callApi({ method, url, data }).then((res) => {
-                console.log('Third');
-                // console.log('Response After Selecting City From Radio', res);
-                this.setState({
-                    tableList: res.data.results,
-                });
+        callApi({ method, url, data }).then((res) => {
+            this.setState({
+                tableList: res.data.results,
             });
-        console.log('Selected City After Sometime Is', selectCity);
-        console.log('222222-->table data', tableList ? tableList[0] : '');
+        });
     }
 
-    handleClickChange = (event) => {                                          // Handler for Checkbox
+    handleClickChange = (event) => {                                             // Handler for Checkbox
         const selectParam = event.target.value;
         const { selectedCountry, selectCity } = this.state;
         let { arrCheckBox, chipData } = this.state;
-        if (arrCheckBox.filter(item => selectParam === item).length) {
-            arrCheckBox.filter(item => selectParam !== item);
+        if (arrCheckBox.filter(item => selectParam === item.label).length) {
+            arrCheckBox.pop(item => selectParam !== item.label);
         } else {
             arrCheckBox.push({ label: selectParam })
         }
-        if (chipData.filter(item => selectParam === item).length) {
-            chipData.filter(item => selectParam !== item);
+        if (chipData.filter(item => selectParam === item.label).length) {
+            chipData.filter(item => selectParam !== item.label);
         } else {
             chipData.push({ label: selectParam });
         }
         this.setState({
             selectParam,
         },() => this.handleClickChange);
-        console.log('Length Of My Array Is', arrCheckBox.length);
-        console.log('My Array', arrCheckBox);
-        console.log('selectParam', selectParam);
         const method = 'get';
         const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&city=' + selectCity + '&parameter[]=' + selectParam;
         const data = {};
@@ -207,10 +173,29 @@ class Home extends React.Component {
             this.setState({
                 tableList: res.data.results,
             });
-    })
+        })
     }
 
-    // handleSort = (sort, orderBy) => async () => {                             // Handler for Sorting
+    handleHasGeo = () => {                                                 // Handler For Has-Geo
+        let { chipData } = this.state;
+        chipData.push({ label: 'HASGEO' });
+        const method = 'get';
+        const url = 'https://api.openaq.org/v1/measurements';
+        const data = {};
+        callApi({ method, url, data }).then((res) => {
+            const response = res.data.results;
+            console.log('HAS-GEO', response);
+            if (!response) {
+                return 'NO SUCH DATA AVAILABLE'
+            } else {
+                this.setState({
+                    tableList: res.data.results,
+                });
+            }
+        })
+    }
+
+    // handleSort = (sort, orderBy) => async () => {
     //     const { selectedCountry } = this.state;
     //     console.log('Selected event for sorting is', orderBy);
     //     if (sort === "asc") {
@@ -237,7 +222,7 @@ class Home extends React.Component {
     //     }
     // }
 
-    handleSort = (sort, orderBy) => () => {
+    handleSort = (sort, orderBy) => () => {                             // Handler for Sorting
         const { selectedCountry } = this.state;
         if (sort === "asc") {
             this.setState({
@@ -248,89 +233,87 @@ class Home extends React.Component {
                 sort: "asc"
             });
         }
-        // return new Promise((resolve, reject) => {
-            const method = 'get';
-            const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&order_by[]=' + orderBy + '&sort[]=' + sort;
-            const data = {};
-            callApi({ method, url, data }).then((res) => {
-                console.log('RESPONSE--response', res);
-                this.setState({
-                    tableList: res.data.results,
-                });
-                // resolve();
-            }).catch(err => {
-                console.log('ERROR OCCURS---->', err);
-                // reject();
+        const method = 'get';
+        const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&order_by[]=' + orderBy + '&sort[]=' + sort;
+        const data = {};
+        callApi({ method, url, data }).then((res) => {
+            this.setState({
+                tableList: res.data.results,
             });
-        // });
+        })
     }
 
-    handleSearch = async (event) => {                             // Handler for Searching
-        const { location } = this.state;
+    handleSearch = (event) => {                             // Handler for Searching
+        const location = event.target.value;
         this.setState({
-            location: event.target.value,
+            location
         });
-        console.log('Searching For', location);
+        console.log('Targeted Location Is', location);
         const method = 'get';
         const url = 'https://api.openaq.org/v1/measurements?location=' + location;
         const data = {};
-        try {
-            const res = await callApi({ method, url, data });
+        callApi({ method, url, data }).then((res) => {
             this.setState({
                 tableList: res.data.results,
             });
-        } catch (error) {
-            console.log('ERROR OCCURS---->', error);
-        }
+        })
     }
 
-    handleChangePage = async () => {                                 // Handler For Pagination
-        let { page, limit, selectedCountry } = this.state;
-        console.log("Page Before Evaluation Is", page);
-        console.log("Limit Before Evaluation Is", limit);
+    // handleChangePage = () => {                                 // Handler For Pagination
+    //     let { page, limit, selectedCountry } = this.state;
+    //     this.setState({
+    //         page: page + 1
+    //     })
+    //     const method = 'get';
+    //     const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&page=' + page + '&limit=' + limit;
+    //     const data = {};
+    //     callApi({ method, url, data }).then((res) => {
+    //         this.setState({
+    //             tableList: res.data.results,
+    //         });
+    //     })
+    // }
+
+    handleChangePage = () => {                                 // Handler For Pagination
+        let { page, limit, selectedCountry, selectCity, arrCheckBox, selectParam } = this.state;
+        let url;
         this.setState({
             page: page + 1
         })
-        console.log("Page After Evaluation Is", page);
-        console.log("Limit After Evaluation Is", limit);
+        console.log('length Is', arrCheckBox.length);
+        console.log('Selected Item In CheckBox Is', selectParam);
+        if (selectCity === '') {
+            url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&page=' + page + '&limit=' + limit;
+        } else if (selectCity !== '') {
+            url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&city=' + selectCity + '&page=' + page + '&limit=' + limit;
+        } else if (arrCheckBox.length > 0) {
+            url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&city=' + selectCity + '&parameter[]=' + selectParam + '&page=' + page + '&limit=' + limit;
+        }
         const method = 'get';
-        const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&page=' + page + '&limit=' + limit;
+        // const url = 'https://api.openaq.org/v1/measurements?country=' + selectedCountry + '&page=' + page + '&limit=' + limit;
         const data = {};
-        try {
-            const res = await callApi({ method, url, data });
+        callApi({ method, url, data }).then((res) => {
             this.setState({
                 tableList: res.data.results,
             });
-        } catch (error) {
-            console.log('ERROR OCCURS---->', error);
-        }
+        })
     }
 
-    handleDelete = (data) => {                                 // Handler For Deleting Chip
+    handleDelete = chipToDelete => () => {                                 // Handler For Deleting Chip
+        console.log('delete function is called');
         const { chipData } = this.state;
-        if (chipData.filter(item => item.label === item).length) {
-            chipData.filter(item => item.label !== item);
+        if (chipData.filter(item => item.label === chipToDelete.label).length) {
+            console.log('inside if statement');
+            // chipData.pop(item => item.label !== chipToDelete.label);
+            chipData.pop(item => item.label);
+            // this.setState({
+            //     // chipData: chipData.pop(item => item.label !== chipToDelete.label)
+            //     chipData: chipData.pop(item => item.label)
+            // });
+            console.log('ChipData After Execution Of If Statement', chipData);
+            console.log('Length Of Array In Delete Handler', chipData.length);
         }
-    }
-
-    handleHasGeo = async () => {                                // Handler For Has-Geo
-        const method = 'get';
-        const url = 'https://api.openaq.org/v1/measurements';
-        const data = {};
-        try {
-            const res = await callApi({ method, url, data });
-            const response = res.data.results;
-            if (!response) {
-                return 'NO SUCH DATA AVAILABLE'
-            } else {
-                this.setState({
-                    tableList: res.data.results,
-                });
-            }
-        } catch (error) {
-            console.log('ERROR OCCURS---->', error);
-        }
-    }
+    };
 
     render() {
         const {
@@ -343,19 +326,17 @@ class Home extends React.Component {
             selectCity,
             selectParam,
             disable,
-            arrCheckBox,
             chipData,
             sort,
             page,
             limit,
             found
         } = this.state;
-        console.log('11111-->table data', tableList ? tableList[0] : '');
-        // console.log("Chip-->", chipData);
-        // console.log("Length Of CheckBox Array-->", arrCheckBox.length);
-        // console.log("Array Of CheckBox-->", arrCheckBox);
-        // console.log("Page In Render Is", this.state.page);
-        // console.log('The Table Data Inside Render', tableList);
+        console.log('LIMIT', limit);
+        console.log('ARR_CHIPDATA', chipData)
+        console.log('Length Of ARR_CHIPDATA', chipData.length)
+        console.log('ARR_CHECKBOX', this.state.arrCheckBox)
+        console.log('Length Of ARR_CHECKBOX', this.state.arrCheckBox.length)
         return (
             <React.Fragment>
                 <NavBar
@@ -369,8 +350,7 @@ class Home extends React.Component {
                     makeSearch={this.handleSearch}
                 />
                 <Chips
-                    city={selectCity}
-                    chips={chipData}
+                    chipsArr={chipData}
                     remove={this.handleDelete}
                 />
                 <Grid container spacing={3}>
@@ -385,31 +365,32 @@ class Home extends React.Component {
                     </Grid>
                     <Grid item xs={12} sm={2}>
                         <SideBar
-                            makeChange={this.handleOnChange}
-                            doChange={this.handleClickChange}
                             city={selectCity}
                             param={selectParam}
                             cities={cityList}
                             parameters={paramsList}
                             show={disable}
+                            doChange={this.handleClickChange}
+                            makeChange={this.handleOnChange}
                             btnClick={this.handleHasGeo}
                         />
                     </Grid>
                     <Grid item xs={12} sm={10}>
                         <TableList
                             tableData={tableList}
-                            sorting={this.handleSort}
                             sortArrow={sort}
                             pages={page}
                             limits={limit}
                             founds={found}
+                            sorting={this.handleSort}
                             pageChange={this.handleChangePage}
                         />
                     </Grid> 
                 </Grid>
             </React.Fragment>
         )
-    }limits
+    }
 }
 
-export default Home;
+// export default Home;
+export default SnackbarHOC(Home);
