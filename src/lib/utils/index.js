@@ -1,3 +1,4 @@
 import callApi from './api';
+import { CITIES, COUNTRIES, FETCHES, LATEST, LOCATIONS, MEASUREMENTS, PARAMETERS, SOURCES } from './constants';
 
-export { callApi };
+export { callApi, CITIES, COUNTRIES, FETCHES, LATEST, LOCATIONS, MEASUREMENTS, PARAMETERS, SOURCES }

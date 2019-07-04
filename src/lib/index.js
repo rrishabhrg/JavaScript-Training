@@ -1,3 +1,3 @@
-import { callApi } from './utils';
+import { callApi, CITIES, COUNTRIES, FETCHES, LATEST, LOCATIONS, MEASUREMENTS, PARAMETERS, SOURCES } from './utils';
 
-export { callApi };
+export { callApi, CITIES, COUNTRIES, FETCHES, LATEST, LOCATIONS, MEASUREMENTS, PARAMETERS, SOURCES };

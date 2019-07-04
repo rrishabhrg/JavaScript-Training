@@ -18,7 +18,6 @@ const styles = theme => ({
 class Chips extends React.Component {
     render() {
         const { classes, chipsArr, remove } = this.props;
-        console.log('chips--->', chipsArr);
         return (
             <Paper className={classes.root}>
                 <Chip label="Applied Filters" className={classes.chip} variant="outlined" />
@@ -29,7 +28,7 @@ class Chips extends React.Component {
                             color="secondary"
                             label={data.label}
                             className={classes.chip}
-                            onDelete={remove(chipsArr)}
+                            onDelete={remove(data.label)}
                         />
                     ))
                 }
