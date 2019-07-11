@@ -34,7 +34,7 @@ class TableDemo extends React.Component {
                       key={row.label}
                       value={row.field}
                       direction={arrowDirection}
-                      onClick={onSort(arrowDirection, row.field)}
+                      onClick={() => onSort(arrowDirection, row.field)}
                     >
                       {row.label}
                     </TableSortLabel>

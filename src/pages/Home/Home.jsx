@@ -1,9 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
+import { withApollo } from "react-apollo";
 import { Grid } from '@material-ui/core';
 import { NavBar, Prompt, SideBar, Chips } from '../../Components';
 import { TableList } from '../Country';
 import { callApi, CITIES, COUNTRIES, FETCHES, LATEST, LOCATIONS, MEASUREMENTS, PARAMETERS, SOURCES } from '../../lib';
+import { config } from '../../config';
+import {
+  COUNTRY_LIST,
+  CITY_LIST,
+  PARAMETERS_LIST,
+  TABLE_DATA,
+  TABLE_DATA_RADIO,
+  TABLE_DATA_CHECK,
+  TABLE_DATA_HASGEO,
+  TABLE_DATA_SORT,
+  TABLE_DATA_SEARCH
+} from '../../ApolloServer';
 
 class Home extends React.Component {
   constructor(props) {
@@ -11,7 +24,7 @@ class Home extends React.Component {
     this.state = {
       open: false,
       disable: true,
-      selectedCountry: localStorage.getItem('token') ? localStorage.getItem('token') : '',
+      selectedCountry: localStorage.getItem('token'),
       countryList: {},
       tableList: {},
       cityList: {},
@@ -59,14 +72,14 @@ class Home extends React.Component {
     })
   }
 
-  getTableData = (selectedCountry) => {       // Handler For Retrieving Data Inside Table After The Selection Of Country From The DropDown
-    const { tableList } = this.state;
-    const uri = MEASUREMENTS + '?country=' + selectedCountry;
-    const url = process.env.REACT_APP_URL + uri;
-    this.setState({
-      tableList
-    }, () => this.handleCallApi(url))
-  }
+  // getTableData = (selectedCountry) => {       // Handler For Retrieving Data Inside Table After The Selection Of Country From The DropDown
+  //   const { tableList } = this.state;
+  //   const uri = MEASUREMENTS + '?country=' + selectedCountry;
+  //   const url = config.URL + uri;
+  //   this.setState({
+  //     tableList
+  //   }, () => this.handleCallApi(url))
+  // }
 
   handleCallApi = (url) => {       // Handler for API call.
     const method = 'get';
@@ -81,47 +94,84 @@ class Home extends React.Component {
     })
   }
 
-  getRadioList = (selectedCountry) => {       // Handler For Retrieving Data Inside SideBar(RadioGroup) After The Selection Of Country From The DropDown
-    const limitRadio = 10000;
-    const method = 'get';
-    const uri = CITIES + '?country=' + selectedCountry + '&limit=' + limitRadio;
-    const url = process.env.REACT_APP_URL + uri;
-    const data = {};
-    callApi({ method, url, data }).then((res) => {
-      this.setState({
-        cityList: res.data.results
-      })
+  getTableData = async (selectedCountry) => {
+    const { client } = this.props;
+    const response = await client.query({
+      query: TABLE_DATA,
+      variables: { countryToken: selectedCountry }
+    })
+    console.log('TABLE DATA ARE', response);
+    this.setState({
+      tableList: response.data.tableNew
     })
   }
 
-  getCheckBoxList = () => {       // Handler For Retrieving Data Inside SideBar(CheckBox) After The Selection Of Country From The DropDown
-    const method = 'get';
-    const uri = PARAMETERS;
-    const url = process.env.REACT_APP_URL + uri;
-    const data = {};
-    callApi({ method, url, data }).then((res) => {
-      this.setState({
-        paramsList: res.data.results
-      })
+  getRadioList = async (selectedCountry) => {       // Handler For Retrieving Data Inside SideBar(RadioGroup) After The Selection Of Country From The DropDown
+    // const limitRadio = 10000;
+    // const method = 'get';
+    // const uri = CITIES + '?country=' + selectedCountry + '&limit=' + limitRadio;
+    // const url = config.URL + uri;       //  https://api.openaq.org/v1/cities?country=selectedCountry&limit=limitRadio
+    // const data = {};
+    // callApi({ method, url, data }).then((res) => {
+    //   this.setState({
+    //     cityList: res.data.results
+    //   })
+    // })
+    const { client } = this.props;
+    const response = await client.query({
+      query: CITY_LIST,
+      variables: { countryToken: selectedCountry }
+    })
+    console.log('CITIES ARE', response);
+    this.setState({
+      cityList: response.data.cityNew
     })
   }
 
-  handleNavBarClickOpen = () => {       // Handler For Opening The DropDown Box If User Want To Change The Country
+  getCheckBoxList = async () => {       // Handler For Retrieving Data Inside SideBar(CheckBox) After The Selection Of Country From The DropDown
+    // const method = 'get';
+    // const uri = PARAMETERS;
+    // const url = config.URL + uri;
+    // const data = {};
+    // callApi({ method, url, data }).then((res) => {
+    //   this.setState({
+    //     paramsList: res.data.results
+    //   })
+    // })
+    const { client } = this.props;
+    const response = await client.query({
+      query: PARAMETERS_LIST
+    })
+    console.log('PARAMETERS ARE', response);
+    this.setState({
+      paramsList: response.data.parameterNew
+    })
+  }
+
+  handleNavBarClickOpen = async () => {       // Handler For Opening The DropDown Box If User Want To Change The Country
     this.handleClickOpen();
-    const method = 'get';
-    const uri = COUNTRIES;
-    const url = process.env.REACT_APP_URL + uri;
-    const data = {};
-    callApi({ method, url, data }).then((res) => {
-      this.setState({
-        countryList: res.data.results
-      })
+    // const method = 'get';
+    // const uri = COUNTRIES;
+    // const url = config.URL + uri;
+    // const data = {};
+    // callApi({ method, url, data }).then((res) => {
+    //   this.setState({
+    //     countryList: res.data.results
+    //   })
+    // })
+    const { client } = this.props;
+    const response = await client.query({
+      query: COUNTRY_LIST
+    });
+    console.log('COUNTRIES ARE', response);
+    this.setState({
+      countryList: response.data.countryNew
     })
   }
 
-  handleOnChange = (event) => {       // Handler for RadioGroup
+  handleOnChange = async (event) => {       // Handler for RadioGroup
     const selectCity = event.target.value;
-    const { selectedCountry, tableList } = this.state;
+    const { selectedCountry } = this.state;
     let { chipData } = this.state;
     if (selectCity === '') {
       chipData.push({ label: selectCity });
@@ -129,18 +179,29 @@ class Home extends React.Component {
       chipData.pop({ label: selectCity });
       chipData.push({ label: selectCity });
     }
-    const uri = MEASUREMENTS + '?country=' + selectedCountry + '&city=' + selectCity;
-    const url = process.env.REACT_APP_URL + uri;
+    // const uri = MEASUREMENTS + '?country=' + selectedCountry + '&city=' + selectCity;
+    // const url = config.URL + uri;
+    // this.setState({
+    //   selectCity,
+    //   disable: false,
+    //   tableList
+    // }, () => this.handleCallApi(url))
+    const { client } = this.props;
+    const response = await client.query({
+      query: TABLE_DATA_RADIO,
+      variables: { countryToken: selectedCountry, cityToken: selectCity }
+    })
+    console.log('TABLE DATA BASED ON SELECTED CITY ARE', response);
     this.setState({
+      tableList: response.data.tableRadio,
       selectCity,
-      disable: false,
-      tableList
-    }, () => this.handleCallApi(url))
+      disable: false
+    })
   }
 
-  handleClickChange = (event) => {       // Handler for Checkbox
+  handleClickChange = async (event) => {       // Handler for Checkbox
     const selectParam = event.target.value;
-    const { selectedCountry, selectCity, tableList } = this.state;
+    const { selectedCountry, selectCity } = this.state;
     let { arrCheckBox, chipData } = this.state;
     if (arrCheckBox.filter(item => selectParam === item.label).length) {
       arrCheckBox.pop(item => selectParam !== item.label);
@@ -152,30 +213,41 @@ class Home extends React.Component {
     } else {
       chipData.push({ label: selectParam });
     }
-    const uri = MEASUREMENTS + '?country=' + selectedCountry + '&city=' + selectCity + '&parameter[]=' + selectParam;
-    const url = process.env.REACT_APP_URL + uri;
+    // const uri = MEASUREMENTS + '?country=' + selectedCountry + '&city=' + selectCity + '&parameter[]=' + selectParam;
+    // const url = config.URL + uri;
+    const { client } = this.props;
+    const response = await client.query({
+      query: TABLE_DATA_CHECK,
+      variables: { countryToken: selectedCountry, cityToken: selectCity, paramsToken: selectParam }
+    })
+    console.log('TABLE DATA BASED ON SELECTED CITY AND PARAMETER ARE', response);
     this.setState({
       selectParam,
-      tableList
-    }, () => this.handleCallApi(url))
+      tableList: response.data.tableCheck
+    })
   }
 
-  handleHasGeo = () => {       // Handler For Has-Geo
+  handleHasGeo = async () => {       // Handler For Has-Geo
     const { tableList } = this.state;
     let { chipData } = this.state;
     chipData.push({ label: 'HASGEO' });
-    const uri = MEASUREMENTS;
-    const url = process.env.REACT_APP_URL + uri;
+    // const uri = MEASUREMENTS;
+    // const url = config.URL + uri;
     if (!tableList) {
       return 'NO SUCH DATA AVAILABLE'
     } else {
+      const { client } = this.props;
+      const response = await client.query({
+        query: TABLE_DATA_HASGEO,
+        // variables: { countryToken: selectedCountry, cityToken: selectCity, paramsToken: selectParam }
+      })
       this.setState({
-        tableList
-      }, () => this.handleCallApi(url))
+        tableList: response.data.tableHasGeo
+      })
     }
   }
 
-  handleSort = (sort, orderBy) => () => {       // Handler for Sorting
+  handleSort = async (sort, orderBy) => {       // Handler for Sorting
     const { selectedCountry, tableList } = this.state;
     if (sort === "asc") {
       this.setState({
@@ -186,22 +258,35 @@ class Home extends React.Component {
         sort: "asc"
       })
     }
-    const uri = MEASUREMENTS + '?country=' + selectedCountry + '&order_by[]=' + orderBy + '&sort[]=' + sort;
-    const url = process.env.REACT_APP_URL + uri;
+    // const uri = MEASUREMENTS + '?country=' + selectedCountry + '&order_by[]=' + orderBy + '&sort[]=' + sort;
+    // const url = config.URL + uri;
+    // this.setState({
+    //   tableList
+    // }, () => this.handleCallApi(url))
+    const { client } = this.props;
+    const response = await client.query({
+      query: TABLE_DATA_SORT,
+      variables: { countryToken: selectedCountry, orderToken: orderBy, sortToken: sort }
+    })
     this.setState({
-      tableList
-    }, () => this.handleCallApi(url))
+      tableList: response.data.tableSort
+    })
   }
 
-  handleSearch = (event) => {       // Handler for Searching
-    const { tableList } = this.state;
+  handleSearch = async (event) => {       // Handler for Searching
+    // const { tableList } = this.state;
     const location = event.target.value;
-    const uri = MEASUREMENTS + '?location=' + location;
-    const url = process.env.REACT_APP_URL + uri;
+    // const uri = MEASUREMENTS + '?location=' + location;
+    // const url = config.URL + uri;
+    const { client } = this.props;
+    const response = await client.query({
+      query: TABLE_DATA_SEARCH,
+      variables: { locationToken: location }
+    })
     this.setState({
       location,
-      tableList
-    }, () => this.handleCallApi(url))
+      tableList: response.data.tableSearch
+    })
   }
 
   handleChangePage = () => {       // Handler For Pagination
@@ -311,4 +396,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default withApollo(Home);
