@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { withStyles, fade } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -18,12 +17,13 @@ import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { withStyles, fade } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexGrow: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   dropdown: {
     display: 'flex',
@@ -89,6 +89,7 @@ class NavBar extends React.Component {
     const { classes, yourCountry, dialogOpen, close, change, name, countryData, ClickOpen, makeSearch } = this.props;
     return (
       <div className={classes.root}>
+        <CssBaseline />
         <AppBar position="static">
           <Toolbar>
             <div>
