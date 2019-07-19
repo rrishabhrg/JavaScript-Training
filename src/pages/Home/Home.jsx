@@ -59,7 +59,8 @@ class Home extends React.Component {
       selectedCountry
     })
     this.handleClose();
-    alert('Your Country Code Is: ' + selectedCountry);
+    // alert('Your Country Code Is: ' + selectedCountry);
+    alert(`Your Country Code Is: ${selectedCountry}`);       // We can also do string concatenation like this in javaScript.
     this.getTableData(selectedCountry);
     this.getRadioList(selectedCountry);
     this.getCheckBoxList();
